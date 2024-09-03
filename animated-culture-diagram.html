@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cultura de la persona ampliada</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+        .diagram {
+            width: 600px;
+            height: 400px;
+        }
+        .circle {
+            fill-opacity: 0.7;
+            stroke: #000;
+            stroke-width: 2;
+        }
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        .fade-in {
+            opacity: 0;
+            animation: fadeIn 2s forwards;
+        }
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+        .delayed-1 { animation-delay: 1s; }
+        .delayed-2 { animation-delay: 2s; }
+        .delayed-3 { animation-delay: 3s; }
+    </style>
+</head>
+<body>
+    <svg class="diagram" viewBox="0 0 600 400">
+        <!-- Triangle -->
+        <path d="M300,50 L100,350 L500,350 Z" fill="none" stroke="#000" stroke-width="2" stroke-dasharray="5,5" class="fade-in delayed-1"/>
+        <text x="300" y="30" text-anchor="middle" class="fade-in delayed-1">entorno social de la persona humana</text>
+        
+        <!-- Circles -->
+        <circle cx="250" cy="200" r="120" class="circle pulse" fill="#E6F3FF"/>
+        <text x="250" y="200" text-anchor="middle" class="fade-in">Naturaleza humana</text>
+        <text x="250" y="220" text-anchor="middle" font-size="12" class="fade-in delayed-1">Universal</text>
+        <text x="250" y="240" text-anchor="middle" font-size="12" class="fade-in delayed-1">Heredado</text>
+        
+        <circle cx="400" cy="200" r="120" class="circle pulse" fill="#FFF0E6"/>
+        <text x="400" y="200" text-anchor="middle" class="fade-in delayed-2">Personalidad</text>
+        <text x="400" y="220" text-anchor="middle" font-size="12" class="fade-in delayed-2">Especifico de la</text>
+        <text x="400" y="240" text-anchor="middle" font-size="12" class="fade-in delayed-2">persona humana</text>
+        
+        <circle cx="325" cy="300" r="120" class="circle pulse" fill="#E6FFE6"/>
+        <text x="325" y="300" text-anchor="middle" class="fade-in delayed-3">Cultura</text>
+        <text x="325" y="320" text-anchor="middle" font-size="12" class="fade-in delayed-3">Especifico del</text>
+        <text x="325" y="340" text-anchor="middle" font-size="12" class="fade-in delayed-3">grupo</text>
+        
+        <!-- Central circle -->
+        <circle cx="325" cy="230" r="30" fill="#FFE6E6" stroke="#000" stroke-width="2" class="pulse"/>
+        <text x="325" y="225" text-anchor="middle" font-size="10" class="fade-in">cultura de la</text>
+        <text x="325" y="240" text-anchor="middle" font-size="10" class="fade-in">persona</text>
+        
+        <!-- Labels -->
+        <text x="140" y="180" text-anchor="end" class="fade-in delayed-1">Heredado</text>
+        <text x="510" y="180" text-anchor="start" class="fade-in delayed-2">Aprendido y heredado</text>
+        <text x="325" y="380" text-anchor="middle" class="fade-in delayed-3">Aprendido</text>
+    </svg>
+</body>
+</html>
