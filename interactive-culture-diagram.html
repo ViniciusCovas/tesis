@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cultura de la persona ampliada</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: transparent;
+        }
+        .diagram {
+            width: 800px;
+            height: 600px;
+            perspective: 1000px; /* Adding 3D perspective */
+        }
+        .circle {
+            fill-opacity: 0.7;
+            stroke: #000;
+            stroke-width: 2;
+            cursor: pointer;
+            transition: transform 0.3s ease, fill-opacity 0.3s ease;
+            transform-style: preserve-3d; /* Preserve 3D transform effects */
+        }
+        .circle:hover {
+            fill-opacity: 0.9;
+            transform: translateZ(20px); /* Creates a 3D hover effect */
+        }
+        .fade-in {
+            opacity: 0;
+            animation: fadeIn 2s forwards;
+        }
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+        .delayed-1 { animation-delay: 1s; }
+        .delayed-2 { animation-delay: 2s; }
+        .delayed-3 { animation-delay: 3s; }
+        #info-panel {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 250px;
+            background-color: white;
+            border: 1px solid #ccc;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            display: none;
+        }
+        .avatar {
+            animation: avatarPulse 2s infinite;
+        }
+        @keyframes avatarPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <svg class="diagram" viewBox="0 0 800 600">
+        <!-- Triangle -->
+        <path d="M400,100 L100,500 L700,500 Z" fill="none" stroke="#000" stroke-width="2" stroke-dasharray="5,5" class="fade-in delayed-1"/>
+        <text x="400" y="80" text-anchor="middle" class="fade-in delayed-1">entorno social de la persona humana</text>
+        
+        <!-- Circles with 3D Effect -->
+        <circle id="naturaleza" cx="300" cy="300" r="180" class="circle fade-in" fill="#E6F3FF"/>
+        <text x="300" y="300" text-anchor="middle" class="fade-in">Naturaleza humana</text>
+        <text x="300" y="330" text-anchor="middle" font-size="14" class="fade-in delayed-1">Universal</text>
+        <text x="300" y="360" text-anchor="middle" font-size="14" class="fade-in delayed-1">Heredado</text>
+        
+        <circle id="personalidad" cx="500" cy="300" r="180" class="circle fade-in delayed-2" fill="#FFF0E6"/>
+        <text x="500" y="300" text-anchor="middle" class="fade-in delayed-2">Personalidad</text>
+        <text x="500" y="330" text-anchor="middle" font-size="14" class="fade-in delayed-2">Especifico de la</text>
+        <text x="500" y="360" text-anchor="middle" font-size="14" class="fade-in delayed-2">persona humana</text>
+        
+        <circle id="cultura" cx="400" cy="450" r="180" class="circle fade-in delayed-3" fill="#E6FFE6"/>
+        <text x="400" y="450" text-anchor="middle" class="fade-in delayed-3">Cultura</text>
+        <text x="400" y="480" text-anchor="middle" font-size="14" class="fade-in delayed-3">Especifico del</text>
+        <text x="400" y="510" text-anchor="middle" font-size="14" class="fade-in delayed-3">grupo</text>
+        
+        <!-- Avatar instead of central circle -->
+        <g class="avatar fade-in">
+            <circle cx="400" cy="350" r="40" fill="#FFE6E6" stroke="#000" stroke-width="2"/>
+            <circle cx="400" cy="335" r="15" fill="#FFD700"/> <!-- Head -->
+            <path d="M385,350 q15,20 30,0" fill="#FFD700"/> <!-- Shoulders -->
+        </g>
+        
+        <!-- Labels -->
+        <text x="150" y="250" text-anchor="end" class="fade-in delayed-1">Heredado</text>
+        <text x="650" y="250" text-anchor="start" class="fade-in delayed-2">Aprendido y heredado</text>
+        <text x="400" y="570" text-anchor="middle" class="fade-in delayed-3">Aprendido</text>
+    </svg>
+    
+    <div id="info-panel"></div>
+
+    <script>
+        const infoPanel = document.getElementById('info-panel');
+        const circles = document.querySelectorAll('.circle');
+        
+        const info = {
+            naturaleza: "La naturaleza humana representa las características universales y heredadas que compartimos como especie. Incluye capacidades básicas como el lenguaje y la sociabilidad.",
+            personalidad: "La personalidad abarca los rasgos específicos de cada individuo, que son tanto heredados como aprendidos a lo largo de la vida. Incluye temperamento, carácter y aptitudes individuales.",
+            cultura: "La cultura comprende los patrones de pensamiento, sentimiento y actuación aprendidos y compartidos por un grupo. Incluye valores, creencias y prácticas sociales."
+        };
+
+        circles.forEach(circle => {
+            circle.addEventListener('click', (e) => {
+                const id = e.target.id;
+                infoPanel.innerHTML = `<h3>${e.target.nextElementSibling.textContent}</h3><p>${info[id]}</p>`;
+                infoPanel.style.display = 'block';
+            });
+
+            circle.addEventListener('mouseover', (e) => {
+                e.target.style.fillOpacity = '0.9';
+            });
+
+            circle.addEventListener('mouseout', (e) => {
+                e.target.style.fillOpacity = '0.7';
+            });
+        });
+    </script>
+</body>
+</html>
