@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análisis de Correlación de Spearman: Latina vs Norte</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f4f8;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            max-width: 800px;
+            width: 100%;
+        }
+        h1, h2 {
+            color: #333;
+            text-align: center;
+        }
+        .chart-container {
+            position: relative;
+            margin: auto;
+            height: 300px;
+            width: 100%;
+        }
+        .slider-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 10px;
+        }
+        .slider-label {
+            margin: 0 10px;
+            font-weight: bold;
+        }
+        #regionSlider {
+            width: 200px;
+        }
+        #explanationBtn {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        #explanationBtn:hover {
+            background-color: #45a049;
+        }
+        #explanationModal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 600px;
+            border-radius: 5px;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Análisis de Correlación de Spearman: Autoeficacia</h1>
+        <h2>Comparación Latina vs Norte</h2>
+        <div class="chart-container">
+            <canvas id="chart"></canvas>
+        </div>
+        <div class="slider-container">
+            <span class="slider-label">Latina</span>
+            <input type="range" id="regionSlider" min="0" max="1" step="1" value="0">
+            <span class="slider-label">Norte</span>
+        </div>
+        <button id="explanationBtn">Explanation</button>
+    </div>
+
+    <div id="explanationModal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="modalTitle"></h2>
+            <p id="modalContent"></p>
+        </div>
+    </div>
+
+    <script>
+        const data = {
+            Latina: [
+                {
+                    question: "Si la plataforma del curso tiene una interfaz fácil de usar, seguiré estudiando el curso.",
+                    coefficient: 0.241,
+                    significance: "<0,001",
+                    n: 547
+                },
+                {
+                    question: "Si la plataforma del curso tiene una buena combinación de colores, continuaré estudiando el curso.",
+                    coefficient: 0.269,
+                    significance: "<0,001",
+                    n: 547
+                },
+                {
+                    question: "Si la plataforma tiene convenios con las principales universidades del mundo, me interesa más hacer un curso",
+                    coefficient: 0.212,
+                    significance: "<0,001",
+                    n: 547
+                }
+            ],
+            Norte: [
+                {
+                    question: "Si la plataforma del curso tiene una interfaz fácil de usar, seguiré estudiando el curso.",
+                    coefficient: 0.186,
+                    significance: "<0,001",
+                    n: 562
+                },
+                {
+                    question: "Si la plataforma del curso tiene una buena combinación de colores, continuaré estudiando el curso.",
+                    coefficient: 0.454,
+                    significance: "<0,001",
+                    n: 562
+                },
+                {
+                    question: "Si la plataforma tiene convenios con las principales universidades del mundo, me interesa más hacer un curso",
+                    coefficient: 0.277,
+                    significance: "<0,001",
+                    n: 562
+                }
+            ]
+        };
+
+        const ctx = document.getElementById('chart').getContext('2d');
+        const slider = document.getElementById('regionSlider');
+        const explanationBtn = document.getElementById('explanationBtn');
+        const modal = document.getElementById('explanationModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalContent = document.getElementById('modalContent');
+        const closeBtn = document.getElementsByClassName('close')[0];
+
+        let chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: data.Latina.map(item => item.question.split(',')[0] + '...'),
+                datasets: [{
+                    label: 'Coeficiente de relación (Latina)',
+                    data: data.Latina.map(item => item.coefficient),
+                    backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 0.5
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed.y !== null) {
+                                    label += context.parsed.y.toFixed(3);
+                                }
+                                return label;
+                            },
+                            title: function(context) {
+                                return data[chart.data.datasets[0].label.includes('Latina') ? 'Latina' : 'Norte'][context[0].dataIndex].question;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        function updateChart(region) {
+            chart.data.datasets[0].label = `Coeficiente de relación (${region})`;
+            chart.data.datasets[0].data = data[region].map(item => item.coefficient);
+            chart.data.labels = data[region].map(item => item.question.split(',')[0] + '...');
+            chart.update();
+        }
+
+        function getExplanation(region) {
+            const regionData = data[region];
+            let explanation = `En la región ${region}, observamos lo siguiente:\n\n`;
+            
+            regionData.forEach((item, index) => {
+                explanation += `${index + 1}. ${item.question}\n`;
+                explanation += `   Coeficiente: ${item.coefficient.toFixed(3)}\n`;
+                explanation += `   Este coeficiente indica una correlación ${item.coefficient < 0.3 ? 'débil' : item.coefficient < 0.5 ? 'moderada' : 'fuerte'}.\n`;
+                explanation += `   La significancia estadística (p < 0.001) sugiere que esta relación no es producto del azar.\n\n`;
+            });
+            
+            explanation += `Interpretación general:\n`;
+            if (region === 'Latina') {
+                explanation += `- La combinación de colores parece tener el mayor impacto en la continuidad del estudio.\n`;
+                explanation += `- La facilidad de uso de la interfaz y los convenios con universidades tienen un impacto similar, aunque ligeramente menor.\n`;
+                explanation += `- Todas las correlaciones son positivas pero relativamente débiles, lo que sugiere que estos factores influyen en la decisión de continuar estudiando, pero no son determinantes.`;
+            } else {
+                explanation += `- La combinación de colores tiene un impacto notablemente mayor en la región Norte comparado con los otros factores y con la región Latina.\n`;
+                explanation += `- Los convenios con universidades tienen un impacto moderado, mayor que en la región Latina.\n`;
+                explanation += `- La facilidad de uso de la interfaz tiene el menor impacto, aunque sigue siendo significativo.\n`;
+                explanation += `- En general, los factores parecen tener un mayor impacto en la región Norte que en la Latina, especialmente en cuanto a la estética de la plataforma.`;
+            }
+            
+            return explanation;
+        }
+
+        slider.addEventListener('change', function() {
+            const region = this.value === "0" ? "Latina" : "Norte";
+            updateChart(region);
+        });
+
+        explanationBtn.onclick = function() {
+            const region = slider.value === "0" ? "Latina" : "Norte";
+            modalTitle.textContent = `Explicación para la región ${region}`;
+            modalContent.textContent = getExplanation(region);
+            modal.style.display = "block";
+        }
+
+        closeBtn.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        // Initialize with Latina data
+        updateChart("Latina");
+    </script>
+</body>
+</html>
